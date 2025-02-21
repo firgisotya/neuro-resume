@@ -1,79 +1,67 @@
-import React, { useCallback, useState } from "react";
-import html2canvas from "html2canvas";
-import { jsPDF } from "jspdf";
+"use client";
+import React, { useState } from "react";
+import { pdf } from "@react-pdf/renderer";
 import { DownloadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { formatFileName } from "@/lib/helper";
-import { StatusType } from "@/types/resume.type";
+import { useResumeContext } from "@/context/resume-info-provider";
+import Resume from "@/components/preview/pdf";
 
-const Download = (props: {
-  title: string;
-  isLoading: boolean;
-  status?: StatusType;
-}) => {
-  const { title, status, isLoading } = props;
+const Download = (props: { title: string; isLoading: boolean }) => {
+  const { title, isLoading } = props;
+  const { resumeInfo } = useResumeContext();
   const [loading, setLoading] = useState(false);
 
-  const handleDownload = useCallback(async () => {
-    const resumeElement = document.getElementById("resume-preview-id");
-    if (!resumeElement) {
+  const handleDownload = async () => {
+    if (!resumeInfo) {
       toast({
         title: "Error",
-        description: "Could not download",
+        description: "No resume data available",
         variant: "destructive",
       });
       return;
     }
+
     setLoading(true);
-
     const fileName = formatFileName(title);
+
     try {
-      const canvas = await html2canvas(resumeElement, { scale: 1 });
-      const imgData = canvas.toDataURL("image/png");
-      const pdf = new jsPDF();
-      const imgWidth = 210; //A4 size in mm
-      const pageHeight = 295;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      // Generate PDF as Blob
+      const blob = await pdf(<Resume isLoading={isLoading} data={resumeInfo} />).toBlob();
+      const url = URL.createObjectURL(blob);
 
-      let position = 0;
-      9;
-      pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
-      }
-      pdf.save(fileName);
+      // Create a link element and trigger download
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${fileName}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error generating PDF:", error);
       toast({
         title: "Error",
-        description: "Error generating PDF:",
+        description: "Failed to generate PDF",
         variant: "destructive",
       });
     } finally {
       setLoading(false);
     }
-  }, [title]);
+  };
 
   return (
     <Button
-      disabled={isLoading || loading || status === "archived" ? true : false}
+      disabled={isLoading || loading}
       variant="secondary"
-      className="bg-white border gap-1
-                   dark:bg-gray-800 !p-2
-                    min-w-9 lg:min-w-auto lg:p-4"
+      className="bg-white border gap-1 dark:bg-gray-800 !p-2 min-w-9 lg:min-w-auto lg:p-4"
       onClick={handleDownload}
     >
       <div className="flex items-center gap-1">
         <DownloadCloud size="17px" />
         <span className="hidden lg:flex">
-          {loading ? "Generating PDF" : "Download Resume"}
+          {loading ? "Generating PDF..." : "Download Resume"}
         </span>
       </div>
     </Button>

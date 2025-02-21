@@ -46,6 +46,20 @@ const Header = () => {
             </Link>
           </div>
 
+          <div className="hidden lg:flex">
+            <ul className="flex items-center gap-5 text-[14px] font-medium text-black dark:text-white">
+              <li>
+                <Link href="/home">Home</Link>
+              </li>
+              <li>
+                <Link href="/resume">Resume</Link>
+              </li>
+              <li>
+                <Link href="/cover-letter">Cover Letter</Link>
+              </li>
+            </ul>
+          </div>
+
           {isAuthenticated && user ? (
             <div className="flex items-center gap-2">
               <span
