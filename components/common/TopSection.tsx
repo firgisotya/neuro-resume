@@ -87,7 +87,6 @@ const TopSection = () => {
           {/* Download Resume */}
           <Download
             title={resumeInfo?.title || "Unititled Resume"}
-            status={resumeInfo?.status}
             isLoading={isLoading}
           />
 
