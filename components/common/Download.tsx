@@ -6,7 +6,15 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { formatFileName } from "@/lib/helper";
 import { useResumeContext } from "@/context/resume-info-provider";
-import Resume from "@/components/preview/pdf";
+import MinimalistTemplate from "@/components/templates/MinimalistTemplate";
+import ModernTemplate from "@/components/templates/ModernTemplate";
+import ProfessionalTemplate from "@/components/templates/ProfessionalTemplate";
+
+const TEMPLATE_COMPONENTS: Record<string, any> = {
+  Minimalist: MinimalistTemplate,
+  Modern: ModernTemplate,
+  Professional: ProfessionalTemplate,
+};
 
 const Download = (props: { title: string; isLoading: boolean }) => {
   const { title, isLoading } = props;
@@ -27,8 +35,11 @@ const Download = (props: { title: string; isLoading: boolean }) => {
     const fileName = formatFileName(title);
 
     try {
+      const SelectedTemplate =
+        TEMPLATE_COMPONENTS[resumeInfo.template || "Minimalist"];
+
       // Generate PDF as Blob
-      const blob = await pdf(<Resume isLoading={isLoading} data={resumeInfo} />).toBlob();
+      const blob = await pdf(<SelectedTemplate isLoading={isLoading} data={resumeInfo} />).toBlob();
       const url = URL.createObjectURL(blob);
 
       // Create a link element and trigger download

@@ -1,0 +1,1 @@
+ALTER TABLE "document" ADD COLUMN "template" varchar(255) NOT NULL;

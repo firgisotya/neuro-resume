@@ -63,12 +63,13 @@ export type StatusType = "archived" | "private" | "public" | undefined;
 export type ResumeDataType = {
   id?: number;
   documentId?: string;
-  title: string;
-  status: StatusType;
+  title?: string;
+  status?: StatusType;
   thumbnail?: string | null;
+  template?: string | null;
   personalInfo?: PersonalInfoType | null;
   currentPosition?: number | null;
-  summary: string | null;
+  summary?: string | null;
   educations?: EducationType[] | null;
   experiences?: ExperienceType[] | null;
   projects?: ProjectType[] | null;

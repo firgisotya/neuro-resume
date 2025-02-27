@@ -62,12 +62,9 @@ const RichTextEditor: React.FC<RichTextEditorProps> = ({
       if (technologies) promptParams["technologies"] = technologies;
 
       const prompt = getPrompt(promptKey, promptParams);
-      console.log("Generated Prompt:", prompt);
       const result = await AIChatSession.sendMessage(prompt);
       const responseText = await result.response.text();
-      console.log("responseText", responseText);
       const validJsonArray = JSON.parse(`[${responseText}]`);
-      console.log("validJsonArray", validJsonArray?.[0].bulletPoints);
 
       // jika ada bulletPoints maka ambil isi bulletPoints
       // jika tidak ada bulletPoints maka ambil isi dari validJsonArray

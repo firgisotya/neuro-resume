@@ -29,7 +29,7 @@ const documentRoute = new Hono()
     async (c) => {
       try {
         const user = c.get("user");
-        const { title } = c.req.valid("json") as DocumentSchema;
+        const { title, template } = c.req.valid("json") as DocumentSchema;
         const userId = user.id;
         const authorName = `${user.given_name} ${user?.family_name}`;
         const authorEmail = user.email as string;
@@ -41,6 +41,7 @@ const documentRoute = new Hono()
           documentId: documentId,
           authorName: authorName,
           authorEmail: authorEmail,
+          template: template || "Minimalist",
         };
 
         const [data] = await db
@@ -86,6 +87,7 @@ const documentRoute = new Hono()
           status,
           summary,
           thumbnail,
+          template,
           currentPosition,
           personalInfo,
           experience,
@@ -119,6 +121,7 @@ const documentRoute = new Hono()
           const resumeUpdate = {} as UpdateDocumentSchema;
           if (title) resumeUpdate.title = title;
           if (thumbnail) resumeUpdate.thumbnail = thumbnail;
+          if (template) resumeUpdate.template = template;
           if (summary) resumeUpdate.summary = summary;
           if (status) resumeUpdate.status = status;
           if (currentPosition)

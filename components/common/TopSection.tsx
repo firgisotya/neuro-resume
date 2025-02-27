@@ -9,6 +9,7 @@ import PreviewModal from "@/components/resume/PreviewModal";
 import Download from "./Download";
 import Share from "./Share";
 import MoreOption from "./MoreOption";
+import TemplateSelector from "./TemplateSelector";
 
 const TopSection = () => {
   const { resumeInfo, isLoading, onUpdate } = useResumeContext();
@@ -80,6 +81,9 @@ const TopSection = () => {
           />
         </div>
         <div className="flex items-center gap-2">
+
+          {/* Template Selector */}
+          <TemplateSelector  />
 
           {/* Preview Modal */}
           <PreviewModal />

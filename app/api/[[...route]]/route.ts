@@ -26,8 +26,6 @@ app.get("/", (c) => {
   });
 });
 
-console.log("Registered Routes:", showRoutes(app, { verbose: true }));
-
 export type AppType = typeof routes;
 
 export const GET = handle(app);

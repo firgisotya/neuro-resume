@@ -6,7 +6,6 @@ import ResumeItem from "./ResumeItem";
 
 const ResumeList = () => {
   const { data, isLoading, isError, refetch } = useGetDocuments();
-  console.log("data", data);
   const resumes = data?.data || [];
   return (
     <Fragment>

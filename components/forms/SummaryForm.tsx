@@ -102,7 +102,6 @@ const SummaryForm = (props: { handleNext: () => void }) => {
       ) {
         throw new Error("Invalid response structure");
       }
-      console.log("parsedResponse", parsedResponse);
       setAiGeneratedSummary(parsedResponse.summaries);
     } catch (error) {
       toast({

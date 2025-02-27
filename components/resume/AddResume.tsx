@@ -2,30 +2,43 @@
 import useCreateDocument from "@/features/document/use-create-document";
 import { FileText, Loader, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
+import TemplateResume from "./TemplateResume";
 
 const AddResume = () => {
   const router = useRouter();
   const { isPending, mutate } = useCreateDocument();
-  const onCreate = useCallback(() => {
-    mutate(
-      {
-        title: "Untitled Resume",
-      },
-      {
-        onSuccess: (response) => {
-          const documentId = response.data.documentId;
-          router.push(`/home/document/${documentId}/edit`);
+  const [showTemplateResume, setShowTemplateResume] = useState(false);
+
+  const handleTemplateSelect = (template: string) => {
+    setShowTemplateResume(false);
+    onCreate(template);
+  };
+
+  const onCreate = useCallback(
+    (template: string) => {
+      mutate(
+        {
+          title: "Untitled Resume",
+          template,
         },
-      }
-    );
-  }, [mutate, router]);
+        {
+          onSuccess: (response) => {
+            const documentId = response.data.documentId;
+            router.push(`/home/document/${documentId}/edit`);
+          },
+        }
+      );
+    },
+    [mutate, router]
+  );
+
   return (
     <>
       <div
         role="button"
         className="p-[2px] w-full cursor-pointer max-w-[164px]"
-        onClick={onCreate}
+        onClick={() => setShowTemplateResume(true)}
       >
         <div
           className="
@@ -51,6 +64,13 @@ const AddResume = () => {
           </p>
         </div>
       </div>
+
+      <TemplateResume
+        isOpen={showTemplateResume}
+        onSelect={handleTemplateSelect}
+        onClose={() => setShowTemplateResume(false)}
+      />
+
       {isPending && (
         <div
           className="fixed top-0 left-0 z-[9999]

@@ -26,6 +26,7 @@ export const documentTable = pgTable("document", {
   title: varchar("title", { length: 255 }).notNull(),
   summary: text("summary"),
   thumbnail: text("thumbnail"),
+  template: varchar("template", { length: 255 }).notNull(),
   currentPosition: integer("current_position").notNull().default(1),
   skill: text("skill"),
   status: statusEnum("status").notNull().default("private"),
@@ -48,6 +49,7 @@ export const documentRelations = relations(documentTable, ({ one, many }) => {
 
 export const createDocumentTableSchema = createInsertSchema(documentTable, {
   title: (schema) => schema.title.min(1),
+  template: (schema) => schema.template.optional(),
   thumbnail: (schema) => schema.thumbnail.optional(),
   currentPosition: (schema) => schema.currentPosition.optional(),
 }).pick({
@@ -55,6 +57,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
   status: true,
   summary: true,
   thumbnail: true,
+  template: true,
   currentPosition: true,
   skill: true,
 });
@@ -62,6 +65,7 @@ export const createDocumentTableSchema = createInsertSchema(documentTable, {
 export const updateCombinedSchema = z.object({
   title: createDocumentTableSchema.shape.title.optional(),
   status: createDocumentTableSchema.shape.status.optional(),
+  template: createDocumentTableSchema.shape.template.optional(),
   thumbnail: createDocumentTableSchema.shape.thumbnail.optional(),
   summary: createDocumentTableSchema.shape.summary.optional(),
   currentPosition: createDocumentTableSchema.shape.currentPosition.optional(),

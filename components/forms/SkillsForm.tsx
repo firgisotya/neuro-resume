@@ -17,7 +17,6 @@ interface SkillType {
 const SkillForm = (props: { handleNext: () => void }) => {
   const { handleNext } = props;
   const { resumeInfo, onUpdate } = useResumeContext();
-  console.log(resumeInfo);
 
   const { mutateAsync, isPending } = useUpdateDocument();
 

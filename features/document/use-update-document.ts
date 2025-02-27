@@ -27,14 +27,16 @@ const useUpdateDocument = () => {
         },
         json,
       });
-      return await response.json();
+      const responseData = await response.json();
+
+      return responseData;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({
         queryKey: ["document", documentId],
       });
     },
-    onError: () => {
+    onError: (error) => {
       toast({
         title: "Error",
         description: "Failed to update document",
